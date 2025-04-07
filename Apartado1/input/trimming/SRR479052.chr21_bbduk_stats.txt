@@ -1,0 +1,26 @@
+#File	data/SRR479052.chr21_1.fastq	data/SRR479052.chr21_2.fastq
+#Total	30680
+#Matched	4699	15.31617%
+#Name	Reads	ReadsPct
+TruSeq_Adapter_Index_1_6	2825	9.20795%
+Nextera_LMP_Read2_External_Adapter	1230	4.00913%
+Reverse_adapter	526	1.71447%
+PCR_Primers	59	0.19231%
+pcr_dimer	31	0.10104%
+TruSeq_Universal_Adapter	6	0.01956%
+PhiX_read2_adapter	4	0.01304%
+PhiX_read1_adapter	2	0.00652%
+TruSeq_Adapter_Index_2	2	0.00652%
+TruSeq_Adapter_Index_9	2	0.00652%
+Bisulfite_R2	1	0.00326%
+I5_Adapter_Nextera	1	0.00326%
+I5_Nextera_Transposase_1	1	0.00326%
+I5_Nextera_Transposase_2	1	0.00326%
+I5_Primer_Nextera_XT_Index_Kit_v2_S516	1	0.00326%
+I7_Nextera_Transposase_1	1	0.00326%
+I7_Nextera_Transposase_2	1	0.00326%
+RNA_Adapter_(RA5)_part_#_15013205	1	0.00326%
+RNA_PCR_Primer_Index_12_(RPI12)	1	0.00326%
+TruSeq_Adapter_Index_10	1	0.00326%
+TruSeq_Adapter_Index_12	1	0.00326%
+TruSeq_Adapter_Index_4	1	0.00326%
