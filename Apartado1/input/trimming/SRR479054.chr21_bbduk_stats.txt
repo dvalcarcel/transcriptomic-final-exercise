@@ -1,0 +1,18 @@
+#File	data/SRR479054.chr21_1.fastq	data/SRR479054.chr21_2.fastq
+#Total	19492
+#Matched	2441	12.52309%
+#Name	Reads	ReadsPct
+TruSeq_Adapter_Index_1_6	1465	7.51590%
+Nextera_LMP_Read2_External_Adapter	598	3.06793%
+Reverse_adapter	324	1.66222%
+PCR_Primers	25	0.12826%
+pcr_dimer	15	0.07695%
+TruSeq_Adapter_Index_12	3	0.01539%
+PhiX_read2_adapter	2	0.01026%
+TruSeq_Adapter_Index_5	2	0.01026%
+TruSeq_Universal_Adapter	2	0.01026%
+I5_Nextera_Transposase_2	1	0.00513%
+I5_Primer_Nextera_XT_and_Nextera_Enrichment_[N/S/E]501	1	0.00513%
+Nextera_LMP_Read1_External_Adapter	1	0.00513%
+TruSeq_Adapter_Index_11	1	0.00513%
+TruSeq_Adapter_Index_8	1	0.00513%
