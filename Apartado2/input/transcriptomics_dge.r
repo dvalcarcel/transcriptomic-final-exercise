@@ -22,9 +22,11 @@ library("mygene")
 # https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html 
 
 
-#Cargamos los datasets
-
+# Establecemos nuestro directorio de trabajo:
 setwd(dir = "/home/vant/Escritorio/transcriptomic-final-exercise/Apartado2/")
+
+
+#Cargamos los datasets
 
 
 # Leemos el archivo de datos crudos, como un csv, indicándole 
@@ -53,7 +55,7 @@ coldata$time <- factor(coldata$time)
 head(cts, 2)
 coldata
 
-# Se observa de manera visualque las muestran siguen 
+# Se observa de manera visual que las muestran siguen 
 # el mismo orden y el mismo nombre, por lo que no hay 
 # que modificarlas.
 # Sin embargo, vamos a comprobar, por un lado, si contamos
