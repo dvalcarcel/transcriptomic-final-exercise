@@ -5,7 +5,6 @@
 # install.packages("pheatmap")
 # install.packages("RColorBrewer")
 # BiocManager::install("EnhancedVolcano")
-# BiocManager::install("apeglm")
 # BiocManager::install("mygene")
 
 #Ahora cargamos las librerías necesarias:
@@ -15,7 +14,6 @@ library("DESeq2")
 library("pheatmap")
 library("RColorBrewer")
 library("EnhancedVolcano")
-library("apeglm")
 library("mygene")
 
 # Para esta práctica, he tenido en cuenta la Vignette de 
@@ -190,27 +188,60 @@ results_OHT_vs_Control_24h <- results(object = dds2,
 
 head(results_OHT_vs_Control_24h)
 
-##Anotamos los genes para mostrar los símbolos para facilitar el estudio biológico
+# Anotamos los genes para mostrar los símbolos para facilitar el estudio biológico
 genesID <-mygene::queryMany(results_OHT_vs_Control_24h$row, scopes="ensembl.gene", fields="symbol", species="human")
 genesID <- genesID[!duplicated(genesID$query),]
-results_OHT_vs_Control_24h$row <- ifelse(is.na(genesID$symbol),genesID$ query,genesID$symbol)
+results_OHT_vs_Control_24h$row <- ifelse(is.na(genesID$symbol),genesID$query,genesID$symbol)
 
 head(results_OHT_vs_Control_24h)
 
 
-## Heatmap de los genes TOP DGE por p-valor ajustado
-mat <- assay(vsd)[head(order(results_OHT_vs_Control_24h$padj), 30), ] 
-pheatmap(mat)
+# Realizamos el Heatmap de los 30 genes TOP DGE por p-valor ajustado
+# para OHT vs Control 24h con los genes anotados por los símbolos de ensembl.
 
-deg_filtered <- results_OHT_vs_Control_24h[results_OHT_vs_Control_24h$padj < 0.05, ]
-deg_filtered_clean <- na.omit(deg_filtered)
+gene_symbols <- ifelse(is.na(genesID$symbol), genesID$query, genesID$symbol)
 
-# Ver los primeros
-head(deg_filtered_clean)
+rownames(vsd) <- gene_symbols
 
+top30_OHT_vs_Control_24h <- head(order(results_OHT_vs_Control_24h$padj), 30)
+mat_OHT_Control <- assay(vsd)[top30, ]
 
+pheatmap(mat_OHT_Control, 
+         scale = "row", 
+         main = "Top 30 DEG OHT vs Control 24h",
+         fontsize_row = 8)
 
-# Creamos el Volcano plot 
+# Ahora vamos a filtrar la DEG por los genes que son estadísticamente
+# significativos en el p ajustados y los vamos a ordenar según su
+# log2FoldChange:
+
+deg_filtered_OHT_vs_Control_24h <- results_OHT_vs_Control_24h[results_OHT_vs_Control_24h$padj < 0.05, ]
+deg_filtered_OHT_vs_Control_24h_clean <- na.omit(deg_filtered_OHT_vs_Control_24h)
+
+print(deg_filtered_OHT_vs_Control_24h_clean$row)
+nrow(deg_filtered_OHT_vs_Control_24h_clean)
+
+deg_filtered_OHT_vs_Control_24h_clean <- 
+  deg_filtered_OHT_vs_Control_24h_clean[order(deg_filtered_OHT_vs_Control_24h_clean$log2FoldChange, 
+                                              decreasing = TRUE), ]
+print(deg_filtered_OHT_vs_Control_24h_clean)
+
+# Observamos que hay 48 genes que se encuentran diferencialmente 
+# expresados entre las muestras pertenecientes al grupo tratado 
+# con OHT con respecto al control tras 24h.
+
+# Los genes CGA, CBFA2T3 y HLA-DRB5 se encuentran más expresados
+# en las muestras con OHT frente al control a las 24h.
+
+# Los genes PRB4, GDA y NEFH se encuentran menos expresados
+# en las muestras con OHT frente al control a las 24h.
+
+# Guardamos la tabla para añadirla al informe:
+
+write.csv(deg_filtered_OHT_vs_Control_24h_clean, 
+          "DEG_filtered_OHT_vs_Control_24h.csv", row.names = FALSE)
+
+# Creamos el Volcano plot para visualizarlo.
 
 EnhancedVolcano(results_OHT_vs_Control_24h,
                 lab = results_OHT_vs_Control_24h$row,
@@ -222,14 +253,88 @@ EnhancedVolcano(results_OHT_vs_Control_24h,
                 subtitle = NULL,
                 boxedLabels = TRUE,
                 drawConnectors = TRUE,
-                labSize = 6.0)
+                labSize = 4.0)
 
 
-# También podemos visualizar el gráfico MA para los cambios 
-# de log2 fold reducidos, que eliminan el ruido asociado 
-# con los cambios de genes de bajo recuento.
 
-resultsNames(dds2)
-resLFC1 <- lfcShrink(dds2, coef="group_OHT_24h_vs_Control_24h", type="apeglm")
-resLFC1
-plotMA(resLFC1, ylim=c(-2,2))
+## DEG de genes para el tratamiento con DPN vs Control 24h ##
+
+
+# Obtención de nuestra lista de genes DEG para DPN vs Control a las 24h:
+results_DPN_vs_Control_24h <- results(object = dds2,
+                                      contrast = c("group","DPN_24h", "Control_24h"), 
+                                      alpha = 0.05,
+                                      pAdjustMethod = "BH", 
+                                      tidy = TRUE
+)
+
+head(results_DPN_vs_Control_24h)
+
+# Anotamos los genes para mostrar los símbolos para facilitar el estudio biológico
+genesID_DPN <-mygene::queryMany(results_DPN_vs_Control_24h$row, scopes="ensembl.gene", fields="symbol", species="human")
+genesID_DPN <- genesID_DPN[!duplicated(genesID_DPN$query),]
+results_DPN_vs_Control_24h$row <- ifelse(is.na(genesID_DPN$symbol),genesID_DPN$query,genesID_DPN$symbol)
+
+head(results_DPN_vs_Control_24h)
+
+
+# Realizamos el Heatmap de los 30 genes TOP DGE por p-valor ajustado
+# para DPN vs Control 24h con los genes anotados por los símbolos de ensembl.
+
+gene_symbols_DPN <- ifelse(is.na(genesID_DPN$symbol), genesID_DPN$query, genesID_DPN$symbol)
+
+rownames(vsd) <- gene_symbols_DPN
+
+top30_DPN_vs_Control_24h <- head(order(results_DPN_vs_Control_24h$padj), 30)
+mat_DPN_Control <- assay(vsd)[top30, ]
+
+pheatmap(mat_DPN_Control, 
+         scale = "row", 
+         main = "Top 30 DEG DPN vs Control 24h",
+         fontsize_row = 8)
+
+# Ahora vamos a filtrar la DEG por los genes que son estadísticamente
+# significativos en el p ajustados y los vamos a ordenar según su
+# log2FoldChange:
+
+deg_filtered_DPN_vs_Control_24h <- results_DPN_vs_Control_24h[results_DPN_vs_Control_24h$padj < 0.05, ]
+deg_filtered_DPN_vs_Control_24h_clean <- na.omit(deg_filtered_DPN_vs_Control_24h)
+
+print(deg_filtered_DPN_vs_Control_24h_clean$row)
+nrow(deg_filtered_DPN_vs_Control_24h_clean)
+
+deg_filtered_DPN_vs_Control_24h_clean <- 
+  deg_filtered_DPN_vs_Control_24h_clean[order(deg_filtered_DPN_vs_Control_24h_clean$log2FoldChange, 
+                                              decreasing = TRUE), ]
+print(deg_filtered_DPN_vs_Control_24h_clean)
+
+# Observamos que hay 87 genes que se encuentran diferencialmente 
+# expresados entre las muestras pertenecientes al grupo tratado 
+# con DPN con respecto al control tras 24h.
+
+# Los genes THAP9-AS1, CTTNBP2 y SCD se encuentran más expresados
+# en las muestras con DPN frente al control a las 24h.
+
+# Los genes PRB4, GDA y ATP1A3 se encuentran menos expresados
+# en las muestras con DPN frente al control a las 24h.
+
+# Guardamos la tabla para añadirla al informe:
+
+write.csv(deg_filtered_DPN_vs_Control_24h_clean, 
+          "DEG_filtered_DPN_vs_Control_24h.csv", row.names = FALSE)
+
+# Creamos el Volcano plot para visualizarlo.
+
+EnhancedVolcano(results_DPN_vs_Control_24h,
+                lab = results_DPN_vs_Control_24h$row,
+                x = "log2FoldChange",
+                y = "padj",
+                title = "DPN vs Control 24h",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                subtitle = NULL,
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                labSize = 4.0)
+
+
