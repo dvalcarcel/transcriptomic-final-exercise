@@ -177,14 +177,7 @@ plotMA(dds2)
 # Observamos que cuanto mayor es la media, mayor es el número
 # de cambios significativos (azul).
 
-# También podemos visualizar el gráfico MA para los cambios 
-# de log2 fold reducidos, que eliminan el ruido asociado 
-# con los cambios de genes de bajo recuento.
-
-resultsNames(dds2)
-resLFC1 <- lfcShrink(dds2, coef="group_OHT_24h_vs_Control_24h", type="apeglm")
-resLFC1
-plotMA(resLFC1, ylim=c(-2,2))
+## DEG de genes para el tratamiento con OHT vs Control 24h ##
 
 
 # Obtención de nuestra lista de genes DEG para OHT vs Control a las 24h:
@@ -230,3 +223,13 @@ EnhancedVolcano(results_OHT_vs_Control_24h,
                 boxedLabels = TRUE,
                 drawConnectors = TRUE,
                 labSize = 6.0)
+
+
+# También podemos visualizar el gráfico MA para los cambios 
+# de log2 fold reducidos, que eliminan el ruido asociado 
+# con los cambios de genes de bajo recuento.
+
+resultsNames(dds2)
+resLFC1 <- lfcShrink(dds2, coef="group_OHT_24h_vs_Control_24h", type="apeglm")
+resLFC1
+plotMA(resLFC1, ylim=c(-2,2))
