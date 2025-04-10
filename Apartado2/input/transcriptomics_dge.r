@@ -6,7 +6,7 @@
 # install.packages("RColorBrewer")
 # BiocManager::install("EnhancedVolcano")
 # BiocManager::install("apeglm")
-
+# BiocManager::install("mygene")
 
 #Ahora cargamos las librerías necesarias:
 
@@ -16,6 +16,7 @@ library("pheatmap")
 library("RColorBrewer")
 library("EnhancedVolcano")
 library("apeglm")
+library("mygene")
 
 # Para esta práctica, he tenido en cuenta la Vignette de 
 # DESeq2, en relación con el input desde la matriz de cuentas.
@@ -186,12 +187,46 @@ resLFC1
 plotMA(resLFC1, ylim=c(-2,2))
 
 
-## Obtengamos nuestra lista de genes DEG
-my_results <- results(object = dds2,
-                      contrast = c("24h","OHT", "Control"), 
+# Obtención de nuestra lista de genes DEG para OHT vs Control a las 24h:
+results_OHT_vs_Control_24h <- results(object = dds2,
+                      contrast = c("group","OHT_24h", "Control_24h"), 
                       alpha = 0.05,
                       pAdjustMethod = "BH", 
                       tidy = TRUE
 )
 
-head(my_results)
+head(results_OHT_vs_Control_24h)
+
+##Anotamos los genes para mostrar los símbolos para facilitar el estudio biológico
+genesID <-mygene::queryMany(results_OHT_vs_Control_24h$row, scopes="ensembl.gene", fields="symbol", species="human")
+genesID <- genesID[!duplicated(genesID$query),]
+results_OHT_vs_Control_24h$row <- ifelse(is.na(genesID$symbol),genesID$ query,genesID$symbol)
+
+head(results_OHT_vs_Control_24h)
+
+
+## Heatmap de los genes TOP DGE por p-valor ajustado
+mat <- assay(vsd)[head(order(results_OHT_vs_Control_24h$padj), 30), ] 
+pheatmap(mat)
+
+deg_filtered <- results_OHT_vs_Control_24h[results_OHT_vs_Control_24h$padj < 0.05, ]
+deg_filtered_clean <- na.omit(deg_filtered)
+
+# Ver los primeros
+head(deg_filtered_clean)
+
+
+
+# Creamos el Volcano plot 
+
+EnhancedVolcano(results_OHT_vs_Control_24h,
+                lab = results_OHT_vs_Control_24h$row,
+                x = "log2FoldChange",
+                y = "padj",
+                title = "OHT vs Control 24h",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                subtitle = NULL,
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                labSize = 6.0)
