@@ -1,0 +1,12 @@
+name: transcriptomic-final-exercise
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - bowtie2
+  - fastqc
+  - hisat2
+  - bbmap
+  - samtools
+  - htseq
