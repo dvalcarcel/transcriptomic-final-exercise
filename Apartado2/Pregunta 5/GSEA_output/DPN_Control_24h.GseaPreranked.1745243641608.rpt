@@ -1,0 +1,23 @@
+producer_class	xtools.gsea.GseaPreranked
+producer_timestamp	1745243641608
+param	rpt_label	DPN_Control_24h
+param	rnd_seed	123
+param	set_min	15
+param	zip_report	false
+param	create_svgs	false
+param	scoring_scheme	weighted
+param	rnk	/home/vant/Escritorio/transcriptomic-final-exercise/Apartado2/DPN_Control_24h.rnk
+param	norm	meandiv
+param	out	/home/vant/Escritorio/transcriptomic-final-exercise/Apartado2/GSEA_output
+param	mode	Abs_max_of_probes
+param	include_only_symbols	true
+param	help	false
+param	set_max	500
+param	gmx	/home/vant/Escritorio/transcriptomic-final-exercise/Apartado2/input/DPN_response.gmt
+param	make_sets	true
+param	plot_top_x	20
+param	gui	false
+param	nperm	1000
+param	collapse	No_Collapse
+
+file	/home/vant/Escritorio/transcriptomic-final-exercise/Apartado2/GSEA_output/DPN_Control_24h.GseaPreranked.1745243641608/index.html
